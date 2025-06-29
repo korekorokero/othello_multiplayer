@@ -210,7 +210,7 @@ class ReversiGame:
         self.board_size = board_size
         self.cell_size = 60
         self.board_margin = 50
-        self.sidebar_width = 200
+        self.sidebar_width = 250
         
         # Calculate window dimensions
         self.board_width = self.cell_size * self.board_size
@@ -539,11 +539,19 @@ class MultiplayerGameScreen:
     def setup_multiplayer_game(self):
         """Setup multiplayer game from network client data"""
         if hasattr(self.network_client, 'current_game_players'):
-            self.game_players = getattr(self.network_client, 'current_game_players', {})
+            self.game_players = getattr(self.network_client, 'current_game_players', {}) or {}
+        else:
+            self.game_players = {}
+            
         if hasattr(self.network_client, 'current_game_player_info'):
-            self.game_player_info = getattr(self.network_client, 'current_game_player_info', {})
+            self.game_player_info = getattr(self.network_client, 'current_game_player_info', {}) or {}
+        else:
+            self.game_player_info = {}
+            
         if hasattr(self.network_client, 'current_game_state'):
-            self.game_state = getattr(self.network_client, 'current_game_state', {})
+            self.game_state = getattr(self.network_client, 'current_game_state', {}) or {}
+        else:
+            self.game_state = {}
         
         print(f"Setting up multiplayer game:")
         print(f"  Players: {self.game_players}")
@@ -551,7 +559,7 @@ class MultiplayerGameScreen:
         print(f"  User data: {self.user_data}")
         
         # Determine your piece color and opponent
-        if self.user_data and 'username' in self.user_data:
+        if self.user_data and 'username' in self.user_data and self.game_players:
             username = self.user_data['username']
             user_id = self.user_data.get('user_id')
             print(f"Looking for user: {username} (ID: {user_id})")
@@ -579,12 +587,19 @@ class MultiplayerGameScreen:
                 print(f"Your turn: {self.your_turn}")
                 
                 # Find opponent name
-                for color, info in self.game_player_info.items():
-                    if color != your_color:
-                        self.opponent_name = info.get('username', 'Opponent')
-                        print(f"Opponent is {self.opponent_name} playing as {color}")
-                        break
-                        
+                if self.game_player_info:
+                    for color, info in self.game_player_info.items():
+                        if color != your_color:
+                            self.opponent_name = info.get('username', 'Opponent') if info else 'Opponent'
+                            print(f"Opponent is {self.opponent_name} playing as {color}")
+                            break
+
+                    for color, info in self.game_player_info.items():
+                            if color != your_color:
+                                self.opponent_name = info.get('username', 'Opponent')
+                                print(f"Opponent is {self.opponent_name} playing as {color}")
+                                break
+                            
                 # No longer waiting for opponent since game started
                 self.waiting_for_opponent = False
             else:
@@ -869,9 +884,9 @@ class MultiplayerGameScreen:
         self.screen.blit(text, (sidebar_x, y_offset))
         
         # Draw your piece indicator
-        pygame.draw.circle(self.screen, your_color, (sidebar_x + 180, y_offset + 15), 12)
-        if self.your_piece == 2:  # White piece needs border
-            pygame.draw.circle(self.screen, self.COLORS['black'], (sidebar_x + 180, y_offset + 15), 12, 2)
+        # pygame.draw.circle(self.screen, your_color, (sidebar_x + 180, y_offset + 15), 12)
+        # if self.your_piece == 2:  # White piece needs border
+        #     pygame.draw.circle(self.screen, self.COLORS['black'], (sidebar_x + 180, y_offset + 15), 12, 2)
         
         y_offset += 40
         
@@ -882,9 +897,9 @@ class MultiplayerGameScreen:
         self.screen.blit(text, (sidebar_x, y_offset))
         
         # Draw opponent piece indicator
-        pygame.draw.circle(self.screen, opponent_color, (sidebar_x + 180, y_offset + 15), 12)
-        if opponent_piece == 2:  # White piece needs border
-            pygame.draw.circle(self.screen, self.COLORS['black'], (sidebar_x + 180, y_offset + 15), 12, 2)
+        # pygame.draw.circle(self.screen, opponent_color, (sidebar_x + 180, y_offset + 15), 12)
+        # if opponent_piece == 2:  # White piece needs border
+        #     pygame.draw.circle(self.screen, self.COLORS['black'], (sidebar_x + 180, y_offset + 15), 12, 2)
         
         y_offset += 60
         
