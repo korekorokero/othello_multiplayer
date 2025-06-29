@@ -127,9 +127,10 @@ class RealOthelloGame:
             self.winner = None  # Tie
 
 class GameManager:
-    def __init__(self, room_code, players):
+    def __init__(self, room_code, players, user_manager):
         self.room_code = room_code
         self.players = {p.user_id: p for p in players} # map user_id to player object
+        self.user_manager = user_manager
         self.game = RealOthelloGame()  # Use real Othello game instead of placeholder
         # In Othello, black always goes first, so assign first player as black
         self.player_colors = {
@@ -171,9 +172,25 @@ class GameManager:
         self.broadcast(update_message)
 
     def end_game(self):
-        """Announces the end of the game."""
-        print(f"[GameManager-{self.room_code}] Game over. Winner: {self.game.winner}")
-        end_message = Protocol.game_over(self.game.winner, self.game.scores)
+        """Announces the end of the game and updates the winner's score."""
+        winner_color = self.game.winner
+        scores = self.game.get_game_state()['scores']
+        
+        print(f"[GameManager-{self.room_code}] Game over. Winner: {winner_color}")
+
+        winner_user_id = None
+        for user_id, color in self.player_colors.items():
+            if color == winner_color:
+                winner_user_id = user_id
+                break
+        
+        if winner_user_id:
+            winner_player = self.players.get(winner_user_id)
+            if winner_player and winner_player.username:
+                points = scores[winner_color]
+                self.user_manager.update_user_score(winner_player.username, points)
+
+        end_message = Protocol.game_over(winner_color, scores)
         self.broadcast(end_message)
 
     def broadcast(self, message):

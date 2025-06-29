@@ -28,9 +28,9 @@ class User:
         return f"User(id={self.user_id}, name={self.username})"
 
 class UserManager:
-    def __init__(self, room_manager):
+    def __init__(self):
         self.users = {} # Maps connection to User object
-        self.room_manager = room_manager
+        self.room_manager = None # Will be set by Server after initialization
         self.lock = threading.Lock()
         self.users_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'users.json')
         self._init_users_file()
@@ -63,6 +63,19 @@ class UserManager:
 
             except IOError as e:
                 print(f"Error saving user data: {e}")
+
+    def update_user_score(self, username, points_to_add):
+        users = self._load_users()
+        if username in users:
+            users[username]['score'] = users[username].get('score', 0) + points_to_add
+            try:
+                with open(self.users_file, 'w') as f:
+                    json.dump(users, f, indent=4)
+                print(f"[UserManager] Updated score for {username}. New score: {users[username]['score']}")
+            except IOError as e:
+                print(f"[UserManager] Error updating user score: {e}")
+        else:
+            print(f"[UserManager] User {username} not found, cannot update score.")
 
     def _load_users(self):
         with self.lock:
