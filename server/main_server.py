@@ -15,8 +15,9 @@ class Server:
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         
         # Initialize managers
-        self.room_manager = RoomManager()
-        self.user_manager = UserManager(self.room_manager)
+        self.user_manager = UserManager()
+        self.room_manager = RoomManager(self.user_manager)
+        self.user_manager.room_manager = self.room_manager
 
     def start(self):
         """Binds the server and starts listening for connections."""
