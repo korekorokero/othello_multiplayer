@@ -1,4 +1,3 @@
-# server/protocols.py
 import json
 
 class Protocol:

@@ -78,11 +78,11 @@ class ProfileScreen:
                 'email': user_data.get('email', 'unknown@example.com'),
                 'created_at': user_data.get('created_at', '2024-01-01T00:00:00Z'),
                 'score': user_data.get('score', 0),
-                'games_played': user_data.get('games_played', 0),
-                'games_won': user_data.get('games_won', 0),
-                'games_lost': user_data.get('games_lost', 0),
-                'games_drawn': user_data.get('games_drawn', 0),
-                'win_rate': user_data.get('win_rate', 0.0)
+                # 'games_played': user_data.get('games_played', 0),
+                # 'games_won': user_data.get('games_won', 0),
+                # 'games_lost': user_data.get('games_lost', 0),
+                # 'games_drawn': user_data.get('games_drawn', 0),
+                # 'win_rate': user_data.get('win_rate', 0.0)
             }
         else:
             # Default data for demonstration
@@ -91,11 +91,11 @@ class ProfileScreen:
                 'email': 'player123@example.com',
                 'created_at': '2024-01-15T10:30:00Z',
                 'score': 1250,
-                'games_played': 45,
-                'games_won': 28,
-                'games_lost': 15,
-                'games_drawn': 2,
-                'win_rate': 62.2
+                # 'games_played': 45,
+                # 'games_won': 28,
+                # 'games_lost': 15,
+                # 'games_drawn': 2,
+                # 'win_rate': 62.2
             }
         
         # Profile card dimensions
@@ -157,11 +157,11 @@ class ProfileScreen:
             ]),
             ("GAME STATISTICS", [
                 f"Current Score: {self.user_data['score']} points",
-                f"Games Played: {self.user_data['games_played']}",
-                f"Games Won: {self.user_data['games_won']}",
-                f"Games Lost: {self.user_data['games_lost']}",
-                f"Games Drawn: {self.user_data['games_drawn']}",
-                f"Win Rate: {self.user_data['win_rate']}%"
+                # f"Games Played: {self.user_data['games_played']}",
+                # f"Games Won: {self.user_data['games_won']}",
+                # f"Games Lost: {self.user_data['games_lost']}",
+                # f"Games Drawn: {self.user_data['games_drawn']}",
+                # f"Win Rate: {self.user_data['win_rate']}%"
             ])
         ]
         

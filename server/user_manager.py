@@ -1,4 +1,3 @@
-# server/user_manager.py
 import uuid
 import threading
 import os
