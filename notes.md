@@ -26,5 +26,3 @@ python demo_game_logic.py
 ```
 
 
-
-buatkan file file ini coba
