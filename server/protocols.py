@@ -21,6 +21,13 @@ class Protocol:
         return Protocol.create_message("user_registered", {"success": success, "user_id": user_id})
 
     @staticmethod
+    def user_logged_in(success, user_data=None):
+        payload = {"success": success}
+        if user_data:
+            payload["user"] = user_data
+        return Protocol.create_message("user_logged_in", payload)
+
+    @staticmethod
     def error(message):
         return Protocol.create_message("error", {"message": message})
 
