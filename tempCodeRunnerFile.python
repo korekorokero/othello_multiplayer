@@ -1,0 +1,12 @@
+class Reversi:
+    def __init__(self):
+        self.board = [["." for _ in range(8)] for _ in range(8)]
+        self.board[3][3], self.board[3][4] = "W", "B"
+        self.board[4][3], self.board[4][4] = "B", "W"
+    
+    def print_board(self):
+        for row in self.board:
+            print(" ".join(row))
+
+game = Reversi()
+game.print_board()
