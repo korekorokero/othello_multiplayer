@@ -37,7 +37,7 @@ class TestLogin(unittest.TestCase):
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect((self.server_host, self.server_port))
         client_socket.sendall(message.encode('utf-8'))
-        response_str = client_socket.recv(1024).decode('utf-8')
+        response_str = client_socket.recv(1024*1024).decode('utf-8')
         client_socket.close()
         return Protocol.parse_message(response_str)
 

@@ -168,6 +168,13 @@ class UserManager:
                 user.send(Protocol.user_logged_in(False))
 
         elif msg_type == "create_room":
+            # Get user_data from payload if provided
+            user_data = payload.get("user_data", {})
+            if user_data.get("username"):
+                user.username = user_data["username"]
+            if user_data.get("user_id"):
+                user.user_id = user_data["user_id"]
+            
             room_code = self.room_manager.create_room(user)
             user.send(Protocol.room_created(room_code))
             # The join automatically sends a room_update
@@ -178,6 +185,13 @@ class UserManager:
 
         elif msg_type == "join_room":
             room_code = payload.get("room_code")
+            # Get user_data from payload if provided
+            user_data = payload.get("user_data", {})
+            if user_data.get("username"):
+                user.username = user_data["username"]
+            if user_data.get("user_id"):
+                user.user_id = user_data["user_id"]
+            
             success, message = self.room_manager.join_room(user, room_code)
             user.send(Protocol.room_joined(success, room_code))
             if success:
@@ -186,6 +200,7 @@ class UserManager:
                 update_msg = Protocol.room_update(room.code, room.players)
                 for p in room.players:
                     p.send(update_msg)
+                print(f"[UserManager] Room {room_code} now has {len(room.players)} players: {[p.username for p in room.players]}")
 
         elif msg_type == "make_move":
             room = user.current_room

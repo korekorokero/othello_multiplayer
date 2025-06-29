@@ -45,7 +45,7 @@ class Server:
         buffer = ""
         try:
             while True:
-                data = connection.recv(1024).decode('utf-8')
+                data = connection.recv(1024*1024).decode('utf-8')
                 if not data:
                     break # Client disconnected
                 

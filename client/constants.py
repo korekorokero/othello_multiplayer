@@ -1,6 +1,6 @@
 # Screen dimensions
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 900
+SCREEN_HEIGHT = 700
 
 # Colors
 COLORS = {

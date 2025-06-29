@@ -28,6 +28,7 @@ class Room:
 
     def start_game(self):
         if self.is_full() and not self.game_manager:
+            print(f"[Room-{self.code}] Starting game with players: {[p.username for p in self.players]}")
             self.game_manager = GameManager(self.code, self.players)
 
 class RoomManager:
@@ -49,7 +50,9 @@ class RoomManager:
         
         if room.add_player(player):
             print(f"[RoomManager] Player {player.username} joined room {room_code}")
+            print(f"[RoomManager] Room {room_code} now has {len(room.players)} players")
             if room.is_full():
+                print(f"[RoomManager] Room {room_code} is full, starting game...")
                 room.start_game()
             return True, "Joined successfully."
         else:
