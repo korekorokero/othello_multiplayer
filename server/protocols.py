@@ -1,4 +1,3 @@
-# server/protocols.py
 import json
 
 class Protocol:
@@ -21,6 +20,13 @@ class Protocol:
         return Protocol.create_message("user_registered", {"success": success, "user_id": user_id})
 
     @staticmethod
+    def user_logged_in(success, user_data=None):
+        payload = {"success": success}
+        if user_data:
+            payload["user"] = user_data
+        return Protocol.create_message("user_logged_in", payload)
+
+    @staticmethod
     def error(message):
         return Protocol.create_message("error", {"message": message})
 
@@ -34,16 +40,34 @@ class Protocol:
 
     @staticmethod
     def room_update(room_code, players):
-        player_names = [p.username for p in players]
-        return Protocol.create_message("room_update", {"room_code": room_code, "players": player_names})
+        player_data = []
+        for p in players:
+            player_data.append({
+                'user_id': p.user_id,
+                'username': p.username or 'Unknown'
+            })
+        return Protocol.create_message("room_update", {"room_code": room_code, "players": player_data})
 
     @staticmethod
     def game_start(players, game_state):
-        player_map = {
-            "white": players[0].user_id,
-            "black": players[1].user_id
-        }
-        return Protocol.create_message("game_start", {"players": player_map, "game_state": game_state})
+        player_map = {}
+        player_info = {}
+        
+        # Assign colors to players - black goes first in Othello
+        colors = ['black', 'white']  # Fixed: black first, white second
+        for i, player in enumerate(players):
+            color = colors[i]
+            player_map[color] = player.user_id
+            player_info[color] = {
+                'user_id': player.user_id,
+                'username': player.username or 'Unknown'
+            }
+        
+        return Protocol.create_message("game_start", {
+            "players": player_map, 
+            "player_info": player_info,
+            "game_state": game_state
+        })
 
     @staticmethod
     def game_update(game_state):

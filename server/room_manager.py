@@ -4,10 +4,11 @@ import string
 from server.game_manager import GameManager
 
 class Room:
-    def __init__(self, room_code):
+    def __init__(self, room_code, user_manager):
         self.code = room_code
         self.players = []
         self.game_manager = None
+        self.user_manager = user_manager  # Reference to UserManager for player management
 
     def add_player(self, player):
         if len(self.players) < 2:
@@ -28,15 +29,17 @@ class Room:
 
     def start_game(self):
         if self.is_full() and not self.game_manager:
-            self.game_manager = GameManager(self.code, self.players)
+            print(f"[Room-{self.code}] Starting game with players: {[p.username for p in self.players]}")
+            self.game_manager = GameManager(self.code, self.players, self.user_manager)
 
 class RoomManager:
-    def __init__(self):
+    def __init__(self, user_manager):
         self.rooms = {} # Maps room_code to Room object
+        self.user_manager = user_manager
 
     def create_room(self, player):
         room_code = self._generate_room_code()
-        room = Room(room_code)
+        room = Room(room_code, self.user_manager)
         self.rooms[room_code] = room
         print(f"[RoomManager] Created room {room_code}")
         self.join_room(player, room_code)
@@ -49,7 +52,9 @@ class RoomManager:
         
         if room.add_player(player):
             print(f"[RoomManager] Player {player.username} joined room {room_code}")
+            print(f"[RoomManager] Room {room_code} now has {len(room.players)} players")
             if room.is_full():
+                print(f"[RoomManager] Room {room_code} is full, starting game...")
                 room.start_game()
             return True, "Joined successfully."
         else:
