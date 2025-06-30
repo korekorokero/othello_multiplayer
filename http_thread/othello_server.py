@@ -4,6 +4,8 @@ import threading
 import time
 import sys
 import logging
+import os
+import webbrowser
 from othello_http import OthelloHttpServer
 
 # Setup logging
@@ -178,6 +180,17 @@ def main():
         server = OthelloServer()
         server.daemon = True
         server.start()
+        
+        # Wait a moment for server to start
+        time.sleep(1)
+        
+        # Try to open browser automatically
+        try:
+            print(f"🌐 Opening browser to http://localhost:8889")
+            webbrowser.open('http://localhost:8889')
+        except Exception as e:
+            print(f"Could not open browser automatically: {e}")
+            print("Please open your browser and go to: http://localhost:8889")
         
         try:
             # Keep main thread alive

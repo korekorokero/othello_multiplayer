@@ -1,4 +1,5 @@
 import sys
+import os
 import os.path
 import uuid
 import json
@@ -732,4 +733,5 @@ class OthelloHttpServer:
             return self.response(200, 'OK', isi, headers)
             
         except Exception as e:
+            return self.response(500, 'Internal Server Error', 'Error reading file', {})
             return self.response(500, 'Internal Server Error', 'Error reading file', {})
